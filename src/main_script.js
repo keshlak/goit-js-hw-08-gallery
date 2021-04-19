@@ -42,25 +42,7 @@ function onImgClick(e) {
   createMarkup(gallery).forEach((el, index) => {
     if (el.includes(e.target.src)) {
       activeIndex = index;
-      document.addEventListener('keydown', e => {
-        if (e.key == 'ArrowLeft') {
-          if (activeIndex > 0) {
-            refs.lightBoxImg.src = gallery[activeIndex - 1].original;
-            activeIndex -= 1;
-            console.log(activeIndex);
-          } else {
-            activeIndex = gallery.length;
-          }
-        } else if (e.key == 'ArrowRight') {
-          if (activeIndex < gallery.length - 1) {
-            refs.lightBoxImg.src = gallery[activeIndex + 1].original;
-            activeIndex += 1;
-            console.log(activeIndex);
-          } else {
-            activeIndex = -1;
-          }
-        }
-      });
+      document.addEventListener('keydown', imgScroll);
     }
   });
 }
@@ -81,5 +63,26 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     refs.lightBox.classList.remove('is-open');
     refs.lightBoxImg.src = '';
+    document.removeEventListener();
   }
 });
+
+const imgScroll = function (e) {
+  if (e.key == 'ArrowLeft') {
+    if (activeIndex > 0) {
+      refs.lightBoxImg.src = gallery[activeIndex - 1].original;
+      activeIndex -= 1;
+      console.log(activeIndex);
+    } else {
+      activeIndex = gallery.length;
+    }
+  } else if (e.key == 'ArrowRight') {
+    if (activeIndex < gallery.length - 1) {
+      refs.lightBoxImg.src = gallery[activeIndex + 1].original;
+      activeIndex += 1;
+      console.log(activeIndex);
+    } else {
+      activeIndex = -1;
+    }
+  }
+};
