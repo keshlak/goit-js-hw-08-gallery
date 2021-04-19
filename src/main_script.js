@@ -1,19 +1,5 @@
 import gallery from './gallery-items.js';
 
-/* <li class="gallery__item">
-  <a
-    class="gallery__link"
-    href="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg"
-  >
-    <img
-      class="gallery__image"
-      src="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546__340.jpg"
-      data-source="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg"
-      alt="Tulips"
-    />
-  </a>
-</li> */
-
 const refs = {
   gallery: document.querySelector('.js-gallery'),
   lightBox: document.querySelector('.js-lightbox'),
@@ -43,7 +29,6 @@ function createMarkup(images) {
 }
 
 refs.gallery.insertAdjacentHTML('beforeend', createMarkup(gallery).join(''));
-console.log(createMarkup(gallery));
 
 refs.gallery.addEventListener('click', onImgClick);
 
@@ -57,9 +42,27 @@ function onImgClick(e) {
   createMarkup(gallery).forEach((el, index) => {
     if (el.includes(e.target.src)) {
       activeIndex = index;
+      document.addEventListener('keydown', e => {
+        if (e.key == 'ArrowLeft') {
+          if (activeIndex > 0) {
+            refs.lightBoxImg.src = gallery[activeIndex - 1].original;
+            activeIndex -= 1;
+            console.log(activeIndex);
+          } else {
+            activeIndex = gallery.length;
+          }
+        } else if (e.key == 'ArrowRight') {
+          if (activeIndex < gallery.length - 1) {
+            refs.lightBoxImg.src = gallery[activeIndex + 1].original;
+            activeIndex += 1;
+            console.log(activeIndex);
+          } else {
+            activeIndex = -1;
+          }
+        }
+      });
     }
   });
-  console.log(activeIndex);
 }
 
 // refs.lightBoxBtn.addEventListener('click', e => {
@@ -71,10 +74,12 @@ refs.lightBox.addEventListener('click', e => {
     return;
   }
   refs.lightBox.classList.remove('is-open');
+  refs.lightBoxImg.src = '';
 });
 
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     refs.lightBox.classList.remove('is-open');
+    refs.lightBoxImg.src = '';
   }
 });
